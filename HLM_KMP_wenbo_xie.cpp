@@ -18,6 +18,36 @@ typedef map<Pair, bool> Dictionary;
 const double TL = 1.0;
 const double TR = 2.0;
 
+/*
+horizontal:
+        |-------------|
+        |             |
+        |             |
+  |------------c------------|
+  |     |             |     |
+  |     c             c     |
+  |     |             |     |
+  |-----------c_i-----------|
+  |     |             |     |
+  |     c             c     |
+  |     |             |     |
+  |------------c------------|
+        |             |
+        |             |
+        |-------------|
+
+vertical:
+        |------|------|
+        |      |      |
+  |--------c-------c--------|
+  |     |      |      |     |
+  |     c     c_i     c     |
+  |     |      |      |     |
+  |--------c-------c--------|
+        |      |      |
+        |------|------|
+*/
+
 enum Direction {
     horizontal,
     vertical
@@ -26,14 +56,15 @@ enum Direction {
 struct interaction
 {
     double time;
-    int location;
+    int location; // Store the index in 1D time_array
     Pair coordinate;
     List adjacent_clocks;
-    Direction direction;
+    Direction direction; //indicates position of clock. it can be either on vertical line or on horizontal line
     interaction* left;
     interaction* right;
 };
 
+//find_adjacent_clocks will return all possible clocks which are adjacent to clock at (i,j).
 List find_adjacent_clocks(int i, int j, Direction direction, int M, int N, int current_index) {
     List lst;
     int total = -1;
@@ -301,7 +332,7 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
     int x = coordinate_min_loc.first / 2; //Compute the x coordinate of cell that the min_loc is corresponding to.
     int y = coordinate_min_loc.second; //Compute the y coordinate of cell......
     List adjacent_clocks_min_loc = pt -> adjacent_clocks;
-    Dictionary old_e_value_classifier; // To determine old_e_value I should use to compute the tmp_double 
+    Dictionary old_e_value_classifier; // To determine old_e_value I should use to compute the tmp_double
     Pair left = make_pair(x, y);
     Pair right = (direction_min_loc == vertical) ? make_pair(x, y + 1) : make_pair(x + 1, y);
     old_e_value_classifier[left] = true;
@@ -332,11 +363,11 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
         double tmp_rnd_uni = u(mt);
         if(y == 0 && direction_min_loc == vertical)
         {
-            total_energy = old_e_right  -log(u(mt))*TL;
+            total_energy = old_e_right  -log(1 - u(mt))*TL;
         }
         if(y == M && direction_min_loc == vertical)
         {
-            total_energy = old_e_left  -log(u(mt))*TR;
+            total_energy = old_e_left  -log(1 - u(mt))*TR;
         }
 
         if(direction_min_loc == vertical) {
@@ -364,17 +395,18 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
             tmp_left = make_pair(tmp_x, tmp_y);
             if(dir == vertical) {
                 //cout<<"Vertical"<<endl;
+
                 tmp_right = make_pair(tmp_x, tmp_y + 1);
                 if(old_e_value_classifier[tmp_left] && direction_min_loc == vertical) {
                     tmp_double = (pt->time - current_time)*sqrt(energy_array[tmp_right.first][tmp_right.second] + old_e_right)/energy_summation(energy_array, tmp_loc.first, tmp_loc.second, dir) + current_time;
                     move_interaction(clock_time_in_step, pt,small_tau,ratio, Step, tmp_double);
                 }
-                
+
                 if(old_e_value_classifier[tmp_right] && direction_min_loc == vertical) {
                     tmp_double = (pt->time - current_time)*sqrt(energy_array[tmp_left.first][tmp_left.second] + old_e_left)/energy_summation(energy_array, tmp_loc.first, tmp_loc.second, dir) + current_time;
                     move_interaction(clock_time_in_step, pt,small_tau,ratio, Step, tmp_double);
                 }
-                
+
                 if(old_e_value_classifier[tmp_left] && direction_min_loc == horizontal) {
                     if(tmp_left == left) {
                         tmp_double = (pt->time - current_time)*sqrt(energy_array[tmp_right.first][tmp_right.second] + old_e_left)/energy_summation(energy_array, tmp_loc.first, tmp_loc.second, dir) + current_time;
@@ -385,7 +417,7 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
                         move_interaction(clock_time_in_step, pt,small_tau,ratio, Step, tmp_double);
                     }
                 }
-                
+
                 if(old_e_value_classifier[tmp_right] && direction_min_loc == horizontal) {
                     if(tmp_right == left) {
                       tmp_double = (pt->time - current_time)*sqrt(energy_array[tmp_left.first][tmp_left.second] + old_e_left)/energy_summation(energy_array, tmp_loc.first, tmp_loc.second, dir) + current_time;
@@ -408,7 +440,7 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
                         move_interaction(clock_time_in_step, pt,small_tau,ratio, Step, tmp_double);
                     }
                 }
-                
+
                 if(old_e_value_classifier[tmp_left] && direction_min_loc == vertical) {
                     if(tmp_left == left) {
                       tmp_double = (pt->time - current_time)*sqrt(energy_array[tmp_right.first][tmp_right.second] + old_e_left)/energy_summation(energy_array, tmp_loc.first, tmp_loc.second, dir) + current_time;
@@ -419,19 +451,19 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
                       move_interaction(clock_time_in_step, pt,small_tau,ratio, Step, tmp_double);
                     }
                 }
-                
+
                 if(old_e_value_classifier[tmp_right] && direction_min_loc == horizontal) {
                     tmp_double = (pt->time - current_time)*sqrt(energy_array[tmp_left.first][tmp_left.second] + old_e_left)/energy_summation(energy_array, tmp_loc.first, tmp_loc.second, dir) + current_time;
                     move_interaction(clock_time_in_step, pt,small_tau,ratio, Step, tmp_double);
                 }
-                
+
                 if(old_e_value_classifier[tmp_left] && direction_min_loc == horizontal) {
                     tmp_double = (pt->time - current_time)*sqrt(energy_array[tmp_right.first][tmp_right.second] + old_e_right)/energy_summation(energy_array, tmp_loc.first, tmp_loc.second, dir) + current_time;
                     move_interaction(clock_time_in_step, pt,small_tau,ratio, Step, tmp_double);
                 }
             }
         }
-        
+
         //Step 3: update current time
         if(clock_time_in_step[level] != NULL)
         {
@@ -527,18 +559,19 @@ int main(int argc, char** argv)
                 index++;
             }
         }
-        //cout<<index;
+        //cout<<"i: "<<i<<" j: "<<j<<" index: "<<index<<endl;
     }
 
-    // for(int i = 0; i < size_of_time_array; i++) {
-    //     cout<<"Current Index: "<<time_array[i].location<<endl;
-    //     cout<<"Adjacent List: ";
-    //     for(iter j = time_array[i].adjacent_clocks.begin() ; j != time_array[i].adjacent_clocks.end() ; j++) {
-    //         cout<<(*j)<<" ";
-    //     }
-    //     cout<<endl;
-    //     //<<time_array[i].adjacent_clocks
-    // }
+//      for(int i = 0; i < size_of_time_array; i++) {
+//          cout<<"Current Index: "<<time_array[i].location<<endl;
+//           cout<<"Current coord: "<<time_array[i].coordinate.first<<","<<time_array[i].coordinate.second<<endl;
+// //         cout<<"Adjacent List: ";
+// //         for(iter j = time_array[i].adjacent_clocks.begin() ; j != time_array[i].adjacent_clocks.end() ; j++) {
+// //             cout<<(*j)<<" ";
+// //         }
+//          cout<<endl;
+//          //<<time_array[i].adjacent_clocks
+//      }
     //cout<<N_times_M<<endl;
     //cout<<index;
 
