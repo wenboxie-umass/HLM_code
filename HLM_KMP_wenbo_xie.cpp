@@ -265,10 +265,12 @@ void big_step_distribute(interaction** &clock_time_in_step, interaction* time_ar
             tmp = int((time_array[i].time - ratio*small_tau*Step)/small_tau);
         }
 
-//        if(tmp < 0 || tmp > ratio) {
-//            tmp = ratio;
-//        }
-
+      //  if(tmp < 0 || tmp > ratio) {
+      //      tmp = ratio;
+      //  }
+      
+      cout<<"Time: "<<time_array[i].time<<" Tmp: "<<tmp<<endl;
+      
         push_front(&clock_time_in_step[tmp], &time_array[i] );
         //cout<<tmp<<endl;
 
@@ -343,7 +345,7 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
     int tmp_x = -1;
     int tmp_y = -1;
     Direction dir = vertical;
-    int a = 0;
+    //int a = 0;
     cout<<"I'm In the Function"<<endl;
     while(current_time < next_time)
     {
@@ -430,6 +432,7 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
                 }
             }
             else {
+                tmp_right = make_pair(tmp_x + 1, tmp_y);
                 if(old_e_value_classifier[tmp_right] && direction_min_loc == vertical) {
                     if(tmp_right == left) {
                         tmp_double = (pt->time - current_time)*sqrt(energy_array[tmp_left.first][tmp_left.second] + old_e_left)/energy_summation(energy_array, tmp_loc.first, tmp_loc.second, dir) + current_time;
@@ -483,21 +486,23 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
 
 int main(int argc, char** argv)
 {
+    cout<<sizeof(interaction);
     struct timeval t1, t2;
     ofstream myfile;
     myfile.open("HL_KMP.txt", ios_base::app);
-    int N = 5, M = 5;
+    int N = 15, M = 30;
     if(argc > 1)
     {
         N = strtol(argv[1], NULL, 10);
         M = strtol(argv[2], NULL, 10);
     }
+    int size_of_time_array = N * (M + 1) + (N - 1) * M;
     int N_times_M = N * M; // N is row, M is column
     double big_tau = 0.2;//big time step of tau leaping
-    const int ratio = int(N/10);//ratio of big step and small step
+    const int ratio = int(size_of_time_array/10);//ratio of big step and small step
     double small_tau = big_tau/double(ratio);//small time step
 
-    int size_of_energy_array = N * (M + 2); //Make the energy array in 2D
+    //int size_of_energy_array = N * (M + 2); //Make the energy array in 2D
     double** energy_array = new double*[N];
     for(int i = 0 ; i < N ; i ++) {
         energy_array[i] = new double[M+2];
@@ -528,7 +533,7 @@ int main(int argc, char** argv)
         }
     }
 
-    int size_of_time_array = N * (M + 1) + (N - 1) * M;
+    
     interaction* time_array = new interaction[size_of_time_array];
     int index = 0;
     int total_number_of_row = 2 * N - 2;
