@@ -75,13 +75,11 @@ struct site {
 
 int find_index(int i, int j, int N, int M, Direction direction)
 {
-	// Is the clock on the vertical side?
 	if(direction == vertical)
 	{
 		return (int)((M + 1) * (int)(i / 2) + M * (int)(i / 2) + (j));
 	}
 
-	// Is the clock on the horizontal side?
 	else
 	{
 		return (int)((M + 1) * (int)(i / 2 + 1) + M * (int)(i / 2) + (j));
