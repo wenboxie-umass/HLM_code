@@ -695,7 +695,11 @@ int main(int argc, char** argv)
                 tmp_list = find_coordinate_of_site_in_energy_array(time_array[min_loc], N, M);
                 //cout<<"min_loc: "<<min_loc<<endl;
                 for(P_list::iterator i = tmp_list.begin() ; i != tmp_list.end() ; i++) {
+<<<<<<< HEAD
                     //E_avg_profile[(*i).first][(*i).second].previous_time = time_array[min_loc].time;
+=======
+                    E_avg_profile[(*i).first][(*i).second].previous_time = time_array[min_loc].time;
+>>>>>>> 806c63413038222f035d30a59681ffcfd157ad83
                     E_avg_profile[(*i).first][(*i).second].previous_energy = energy_array[(*i).first][(*i).second];
                     //cout<<"("<<(*i).first<<","<<(*i).second<<"),";
                 }
@@ -716,7 +720,10 @@ int main(int argc, char** argv)
                     //cout<<curr_energy * (curr_time - pre_time)<<endl;
                     E_avg_profile[(*i).first][(*i).second].record.push_back(curr_energy * (curr_time - pre_time));
                     E_avg_profile[(*i).first][(*i).second].summation += curr_energy * (curr_time - pre_time);
+<<<<<<< HEAD
                     E_avg_profile[(*i).first][(*i).second].previous_time = time_array[min_loc].time;
+=======
+>>>>>>> 806c63413038222f035d30a59681ffcfd157ad83
                 }
                 //cout<<count<<endl;
             }

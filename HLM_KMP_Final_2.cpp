@@ -353,7 +353,11 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
 
         tmp_list = find_coordinate_of_site_in_energy_array(time_array[min_loc], N, M);
         for(P_list::iterator i = tmp_list.begin() ; i != tmp_list.end() ; i++) {
+<<<<<<< HEAD
             //E_avg_profile[(*i).first][(*i).second].previous_time = time_array[min_loc].time;
+=======
+            E_avg_profile[(*i).first][(*i).second].previous_time = time_array[min_loc].time;
+>>>>>>> 806c63413038222f035d30a59681ffcfd157ad83
             E_avg_profile[(*i).first][(*i).second].previous_energy = energy_array[(*i).first][(*i).second];
             //cout<<"("<<(*i).first<<","<<(*i).second<<"),";
         }
@@ -390,7 +394,11 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
             energy_array[x + 1][y + 1] = (1 - tmp_rnd_uni)*total_energy;//update energy
         }
         move_interaction(clock_time_in_step, pt,small_tau,ratio, Step,  current_time + tmp_double);
+<<<<<<< HEAD
         //curr_time = time_array[min_loc].time;
+=======
+
+>>>>>>> 806c63413038222f035d30a59681ffcfd157ad83
         for(P_list::iterator i = tmp_list.begin() ; i != tmp_list.end() ; i++) {
 //                    if((*i).first == 0 &&  (*i).second == 0) {
 //                        //cout<<"OK";
@@ -398,6 +406,7 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
 //                    }
             //cout<<(*i).first<<","<<(*i).second<<endl;
             pre_time = E_avg_profile[(*i).first][(*i).second].previous_time;
+<<<<<<< HEAD
             //cout<<pre_time<<" ";
             curr_energy = E_avg_profile[(*i).first][(*i).second].previous_energy;//energy_array[(*i).first][(*i).second];
             //cout<<curr_energy * (curr_time - pre_time)<<endl;
@@ -407,6 +416,15 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
             
         }
         //cout<<endl;
+=======
+            curr_time = time_array[min_loc].time;
+            curr_energy = E_avg_profile[(*i).first][(*i).second].previous_energy;//energy_array[(*i).first][(*i).second];
+            //cout<<curr_energy * (curr_time - pre_time)<<endl;
+            //E_avg_profile[(*i).first][(*i).second].record.push_back(curr_energy * (curr_time - pre_time));
+            E_avg_profile[(*i).first][(*i).second].summation += curr_energy * (curr_time - pre_time);
+        }
+
+>>>>>>> 806c63413038222f035d30a59681ffcfd157ad83
         //Step 2: update other interactions
         for(iter i = adjacent_clocks_min_loc.begin() ; i != adjacent_clocks_min_loc.end() ; i++) {
             pt = &time_array[(*i)];
