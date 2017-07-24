@@ -205,7 +205,6 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
         }
         if(min_loc == N)
         {
-            previous_energy = energy_array[min_loc - 1];
             total_energy = old_e_left  -log(1 - u(r))*TR;
         }
         if(min_loc != 0)
@@ -224,10 +223,6 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
         current_energy = energy_array[min_loc];
         if(min_loc == 0) {
             current_energy = energy_array[min_loc + 1];
-        }
-        
-        if(min_loc == N) {
-            current_energy = energy_array[min_loc - 1];
         }
         
         energy_integration += (current_energy - previous_energy);
