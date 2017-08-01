@@ -315,7 +315,7 @@ int main(int argc, char** argv)
     auto sum = 0.0;
     array<double, N_thread> energy_integration;
     //array<thread_info, N_thread> infos;
-    const int N_value = 15;
+    const int N_value = 2;
     const int N_Max = 40;
     const double TR_Max = 3.0;
     const double TL_Max = 10.0;
@@ -446,7 +446,7 @@ int main(int argc, char** argv)
     
     test_begin:
     
-        ratio = int(N/10);//ratio of big step and small step
+        ratio = (N < 10) ? 2 : int(N/10);//ratio of big step and small step
         small_tau = (N < 10) ? 0.1 : big_tau/double(ratio);//small time step
 
         
