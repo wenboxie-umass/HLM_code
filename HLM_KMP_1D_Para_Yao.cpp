@@ -612,7 +612,7 @@ int main(int argc, char** argv)
     terminate:
         if(rate_func == rf1) {
             current_test = type1;
-            N = 15;
+            N = N_value;
             TL = 1.0;
             TR = 2.0;
             rate_func = rf2;
