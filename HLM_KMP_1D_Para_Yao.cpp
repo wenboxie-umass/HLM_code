@@ -316,6 +316,7 @@ int main(int argc, char** argv)
     array<double, N_thread> energy_integration;
     //array<thread_info, N_thread> infos;
     const int N_value = 2;
+    const int N_Normal = 15;
     const int N_Max = 40;
     const double TR_Max = 3.0;
     const double TL_Max = 10.0;
@@ -359,7 +360,7 @@ int main(int argc, char** argv)
             cout<<"----------------------"<<endl;
             start_row += (number_of_trails + 3);
             iteration = 0;
-            N = N_value;
+            N = N_Normal;
             TR = 1.5;
             goto check;
         }
