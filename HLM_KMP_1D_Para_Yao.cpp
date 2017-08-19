@@ -44,7 +44,7 @@ struct thread_info {
 
 Rate_Func rate_func = rf1;
 
-double rate_function(double x, double y) {
+inline double rate_function(double x, double y) {
 
     return (rate_func == rf1) ? sqrt(x*y/(x+y)) : sqrt(x+y);
 
