@@ -12,7 +12,7 @@
 using namespace std;
 
 const double TL = 1.0;
-const double TR = 2.0;
+const double TR = 10.0;
 
 enum Rate_Func {
 	rf1,
@@ -177,7 +177,7 @@ void move_interaction(interaction** &clock_time_in_step, interaction* pt, const 
 	}
 	else
 	{
-		new_level = floor( (new_time - Step*ratio*small_tau)/small_tau );
+		new_level = floor( (new_time - ratio*small_tau*Step)/small_tau );
 		if( new_level < 0 || new_level >= ratio)
 		{
 			cout<<"Error!!"<<endl;
@@ -257,41 +257,41 @@ void update(interaction** &clock_time_in_step, const int level, const int N, con
 		//Both energy[int(N/2)] and energy[int(N/2) + 1] are changing
 		if(min_loc == mid_point) {
 			
-			X.summation = (current_time - X.pre_time) * X.values.back();
+			X.summation += (current_time - X.pre_time) * X.values.back();
 			X.pre_time = current_time;
 			X.values.push_back(energy_array[min_loc]);
 			
-			Y.summation = (current_time - Y.pre_time) * Y.values.back();
+			Y.summation += (current_time - Y.pre_time) * Y.values.back();
 			Y.pre_time = current_time;
 			Y.values.push_back(energy_array[min_loc + 1]);
 			
-			X_times_Y.summation = (current_time - X_times_Y.pre_time)*(X_times_Y.values.back());
+			X_times_Y.summation += (current_time - X_times_Y.pre_time)*(X_times_Y.values.back());
 			X_times_Y.pre_time = current_time;
-			X_times_Y.values.push_back(energy_array[min_loc] * energy_array[min_loc + 1]);
+			X_times_Y.values.push_back(energy_array[mid_point] * energy_array[mid_point + 1]);
 		}
 		
 		//Only energy[int(N/2)] is changing
 		else if (min_loc + 1 == mid_point) {
 			
-			X.summation = (current_time - X.pre_time) * X.values.back();
+			X.summation += (current_time - X.pre_time) * X.values.back();
 			X.pre_time = current_time;
-			X.values.push_back(energy_array[min_loc]);
+			X.values.push_back(energy_array[min_loc + 1]);
 			
-			X_times_Y.summation = (current_time - X_times_Y.pre_time)*(X_times_Y.values.back());
+			X_times_Y.summation += (current_time - X_times_Y.pre_time)*(X_times_Y.values.back());
 			X_times_Y.pre_time = current_time;
-			X_times_Y.values.push_back(energy_array[min_loc] * energy_array[min_loc + 1]);
+			X_times_Y.values.push_back(energy_array[mid_point] * energy_array[mid_point + 1]);
 		}
 		
 		//Only energy[int(N/2) + 1] is changing
 		else if (min_loc == mid_point + 1) {
 			
-			Y.summation = (current_time - Y.pre_time) * Y.values.back();
+			Y.summation += (current_time - Y.pre_time) * Y.values.back();
 			Y.pre_time = current_time;
-			Y.values.push_back(energy_array[min_loc + 1]);
+			Y.values.push_back(energy_array[min_loc]);
 			
-			X_times_Y.summation = (current_time - X_times_Y.pre_time)*(X_times_Y.values.back());
+			X_times_Y.summation += (current_time - X_times_Y.pre_time)*(X_times_Y.values.back());
 			X_times_Y.pre_time = current_time;
-			X_times_Y.values.push_back(energy_array[min_loc] * energy_array[min_loc + 1]);
+			X_times_Y.values.push_back(energy_array[mid_point] * energy_array[mid_point + 1]);
 			
 		}
 		
@@ -384,7 +384,7 @@ int main(int argc, char** argv)
 	double small_tau = big_tau/double(ratio);//small time step
 	double rnd;
 	const int N_thread = 8;
-	const int Step = 10000;
+	const int Step = 500000;
 	
 	thread_info *info = new thread_info[N_thread];
 	
@@ -486,6 +486,11 @@ int main(int argc, char** argv)
 	
 	for(int i = 0 ; i < N_thread ; i++) {
 		cout<<"Current Thread: "<<i<<endl;
+		
+		cout<<"XY Summation: "<<X_times_Y_array[i].summation<<endl;
+		cout<<"X Summation: "<<X_array[i].summation<<endl;
+		cout<<"Y Summation: "<<Y_array[i].summation<<endl;
+		
 		cout<<"E[XY] = "<<X_times_Y_array[i].summation/(Step*big_tau)<<endl;
 		cout<<"E[X] = "<<X_array[i].summation/(Step*big_tau)<<endl;
 		cout<<"E[Y] = "<<Y_array[i].summation/(Step*big_tau)<<endl;
